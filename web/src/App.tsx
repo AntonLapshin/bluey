@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useRef, useEffect } from "react";
+import { BlueyImage } from "./components/BlueyImage";
+import { Score } from "./components/Score";
+import { Audio } from "./components/Audio";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const playHey = useRef<() => void>();
+  const playAsk = useRef<() => void>();
+
+  useEffect(() => {
+    setTimeout(() => {
+      // playHey.current?.();
+    }, 1000);
+
+    setTimeout(() => {
+      // playAsk.current?.();
+    }, 5000);
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div
+      style={{
+        height: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        padding: "1rem",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "end" }}>
+        <Score />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <div style={{ width: "40%" }}>
+          <BlueyImage />
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <Audio src="/hey.mp3" playRef={playHey} />
+      <Audio src="/ask.mp3" playRef={playAsk} />
+    </div>
+  );
 }
 
-export default App
+export default App;
