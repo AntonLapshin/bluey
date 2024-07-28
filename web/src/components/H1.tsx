@@ -7,6 +7,7 @@ export const H1 = ({ children }: PropsWithChildren) => {
         color: "white",
         lineHeight: 1,
         textShadow: "5px 5px 9px #6a6a6a",
+        fontSize: '2rem'
       }}
     >
       {children}

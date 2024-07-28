@@ -36,25 +36,25 @@ function __App({ signOut }: WithAuthenticatorProps) {
         // display: "flex",
         // flexDirection: "column",
         // gap: "1rem",
-        padding: "3rem",
+        padding: "2rem",
         backgroundColor: "#2fc7f9",
       }}
     >
       <Panel>
-        <div style={{ display: "flex", flexDirection: "column", gap: "5rem" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div
             style={{
               width: "100%",
               display: "flex",
               justifyContent: "space-between",
-              gap: "2rem",
+              gap: "1rem",
               alignItems: "center",
             }}
           >
             <div
               style={{
                 display: "flex",
-                gap: "2rem",
+                gap: "1rem",
                 alignItems: "center",
               }}
             >
@@ -64,7 +64,7 @@ function __App({ signOut }: WithAuthenticatorProps) {
             <Score />
           </div>
           <div style={{ display: "flex", gap: "1rem" }}>
-            <div style={{ minWidth: 242, width: 242 }}>
+            <div style={{ minWidth: 200, width: 200 }}>
               <BlueyImage />
             </div>
             {(!question || pressedIndex !== undefined) && (

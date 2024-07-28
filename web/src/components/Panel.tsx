@@ -9,7 +9,7 @@ export const Panel = ({ children }: PropsWithChildren) => {
         backgroundColor: "#5379a791",
         borderRadius: 55,
         boxShadow: "rgb(25 10 63 / 55%) 45px 45px 150px 0px",
-        padding: "3rem",
+        padding: "2rem",
       }}
     >
       {children}
