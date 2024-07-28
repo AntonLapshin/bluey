@@ -1,0 +1,12 @@
+{
+  "BlueyStack": {
+    "UserPoolClientId": "593k5g309ane81neob7ip81d6j",
+    "UserPoolDomain": "bluey-07-27-2024.auth.us-east-2.amazoncognito.com",
+    "UserPoolId": "us-east-2_xFEAbqJGz",
+    "Region": "us-east-2",
+    "IdentityPoolId": "us-east-2:65561d7c-2aef-480c-8143-581f0445f06f",
+    "WebOrigin": "https://master.d3o98ozl8omkp9.amplifyapp.com/",
+    "WebOriginLocal": "http://localhost:5173/",
+    "BlueyApiEndpoint009590E6": "https://l3250dq4db.execute-api.us-east-2.amazonaws.com/prod/"
+  }
+}

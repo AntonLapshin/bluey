@@ -2,8 +2,20 @@ import { useRef, useEffect } from "react";
 import { BlueyImage } from "./components/BlueyImage";
 import { Score } from "./components/Score";
 import { Audio } from "./components/Audio";
+import {
+  withAuthenticator,
+  WithAuthenticatorProps,
+} from "@aws-amplify/ui-react";
+import { useEmail } from "./hooks/useEmail";
+import { useQuestion } from "./hooks/useQuestion";
+import { Panel } from "./components/Panel";
+import { Button } from "./components/Button";
+import { H1 } from "./components/H1";
 
-function App() {
+function __App({ signOut }: WithAuthenticatorProps) {
+  const email = useEmail();
+  const { question, getNewQuestion, selectOption, pressedIndex } =
+    useQuestion();
   const playHey = useRef<() => void>();
   const playAsk = useRef<() => void>();
 
@@ -21,24 +33,95 @@ function App() {
     <div
       style={{
         height: "100dvh",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        padding: "1rem",
+        // display: "flex",
+        // flexDirection: "column",
+        // gap: "1rem",
+        padding: "3rem",
+        backgroundColor: "#2fc7f9",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "end" }}>
-        <Score />
-      </div>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        <div style={{ width: "40%" }}>
-          <BlueyImage />
+      <Panel>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5rem" }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "2rem",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "2rem",
+                alignItems: "center",
+              }}
+            >
+              <div>{email}</div>
+              <Button onClick={signOut}>Sign out</Button>
+            </div>
+            <Score />
+          </div>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ minWidth: 242, width: 242 }}>
+              <BlueyImage />
+            </div>
+            {(!question || pressedIndex !== undefined) && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                  width: "60%",
+                }}
+              >
+                <H1>Are you ready for a new question?</H1>
+                <div style={{ width: 100 }}>
+                  <Button onClick={getNewQuestion}>Yes</Button>
+                </div>
+              </div>
+            )}
+          </div>
+          {question && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
+              <H1>{question.desc}</H1>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                {question.options.map((option, index) => {
+                  const variant =
+                    pressedIndex !== undefined
+                      ? index === question.correctAnswerIndex
+                        ? "success"
+                        : "error"
+                      : "";
+
+                  return (
+                    <Button
+                      variant={variant}
+                      key={option}
+                      onClick={() => selectOption(index)}
+                    >
+                      {option}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          <Audio src="/hey.mp3" playRef={playHey} />
+          <Audio src="/ask.mp3" playRef={playAsk} />
         </div>
-      </div>
-      <Audio src="/hey.mp3" playRef={playHey} />
-      <Audio src="/ask.mp3" playRef={playAsk} />
+      </Panel>
     </div>
   );
 }
 
-export default App;
+export const App = withAuthenticator(__App, {
+  socialProviders: ["google"],
+});
