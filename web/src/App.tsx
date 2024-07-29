@@ -10,115 +10,145 @@ import { useEmail } from "./hooks/useEmail";
 import { useQuestion } from "./hooks/useQuestion";
 import { Panel } from "./components/Panel";
 import { Button } from "./components/Button";
-import { H1 } from "./components/H1";
+import { styled } from "./stitches.config";
+import { Col, Flex, H1, Row, Text } from "./components/Primitives";
+import { Loader } from "./components/Loader";
+
+const AppContainer = styled("div", {
+  width: "100dvw",
+  height: "100dvh",
+  backgroundColor: "#2fc7f9",
+  padding: "0.5rem",
+  "@bp1": {
+    padding: "2rem",
+  },
+});
+
+const BlueyImageContainer = styled("div", {
+  width: 100,
+  minWidth: 100,
+  "@bp1": {
+    minWidth: 150,
+    width: 150,
+  },
+});
 
 function __App({ signOut }: WithAuthenticatorProps) {
   const email = useEmail();
-  const { question, getNewQuestion, selectOption, pressedIndex } =
-    useQuestion();
-  const playHey = useRef<() => void>();
-  const playAsk = useRef<() => void>();
+  // const playHey = useRef<() => void>();
+  // const playAsk = useRef<() => void>();
+  // const playCorrect = useRef<() => void>();
+  // const playWrong = useRef<() => void>();
+
+  const {
+    loading,
+    question,
+    getNewQuestion,
+    selectOption,
+    pressedIndex,
+    isPressed,
+  } = useQuestion({
+    onCorrect: () => {
+      // playCorrect.current?.();
+    },
+    onWrong: () => {
+      // playWrong.current?.();
+    },
+  });
 
   useEffect(() => {
-    setTimeout(() => {
-      // playHey.current?.();
-    }, 1000);
+    // setTimeout(() => {
+    //   playHey.current?.();
+    // }, 1000);
 
     setTimeout(() => {
       // playAsk.current?.();
-    }, 5000);
+    }, 1000);
   }, []);
 
   return (
-    <div
-      style={{
-        height: "100dvh",
-        // display: "flex",
-        // flexDirection: "column",
-        // gap: "1rem",
-        padding: "2rem",
-        backgroundColor: "#2fc7f9",
-      }}
-    >
+    <AppContainer>
       <Panel>
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
+        <Col css={{ gap: "1.5rem" }}>
+          <Row
+            css={{
+              alignSelf: "end",
               justifyContent: "space-between",
               gap: "1rem",
-              alignItems: "center",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                alignItems: "center",
-              }}
-            >
-              <div>{email}</div>
-              <Button onClick={signOut}>Sign out</Button>
-            </div>
-            <Score />
-          </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <div style={{ minWidth: 200, width: 200 }}>
+            <Text small>{email}</Text>
+            <Button onClick={signOut}>Sign out</Button>
+          </Row>
+          <Row css={{ justifyContent: "center", gap: "2rem" }}>
+            <BlueyImageContainer>
               <BlueyImage />
-            </div>
-            {(!question || pressedIndex !== undefined) && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  width: "60%",
-                }}
-              >
-                <H1>Are you ready for a new question?</H1>
-                <div style={{ width: 100 }}>
-                  <Button onClick={getNewQuestion}>Yes</Button>
-                </div>
+            </BlueyImageContainer>
+            <Score />
+          </Row>
+          <Row css={{ gap: "1rem" }}></Row>
+          <Col
+            css={{
+              position: "relative",
+            }}
+          >
+            <Col
+              css={{
+                gap: "0.5rem",
+                visibility:
+                  (!question || isPressed) && !loading ? "visible" : "hidden",
+              }}
+            >
+              <H1 css={{ textAlign: "center" }}>
+                Are you ready for a new question?
+              </H1>
+              <div style={{ width: 100 }}>
+                <Button onClick={getNewQuestion}>Yes</Button>
               </div>
+            </Col>
+            {loading && (
+              <Flex css={{ position: "absolute", margin: "auto" }}>
+                <Loader />
+              </Flex>
             )}
-          </div>
+          </Col>
           {question && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
+            <Col
+              css={{
                 gap: "1rem",
               }}
             >
-              <H1>{question.desc}</H1>
-              <div style={{ display: "flex", gap: "1rem" }}>
+              <H1 css={{ textAlign: "center" }}>{question.desc}</H1>
+              <Row css={{ gap: "0.5rem" }}>
                 {question.options.map((option, index) => {
-                  const variant =
-                    pressedIndex !== undefined
-                      ? index === question.correctAnswerIndex
-                        ? "success"
-                        : "error"
-                      : "";
+                  const color =
+                    isPressed && index === question.correctAnswerIndex
+                      ? "success"
+                      : index === pressedIndex
+                      ? "error"
+                      : "default";
 
                   return (
                     <Button
-                      variant={variant}
+                      color={color}
                       key={option}
+                      disabled={loading}
                       onClick={() => selectOption(index)}
                     >
                       {option}
                     </Button>
                   );
                 })}
-              </div>
-            </div>
+              </Row>
+            </Col>
           )}
-          <Audio src="/hey.mp3" playRef={playHey} />
+          {/* <Audio src="/hey.mp3" playRef={playHey} />
           <Audio src="/ask.mp3" playRef={playAsk} />
-        </div>
+          <Audio src="/correct.mp3" playRef={playCorrect} />
+          <Audio src="/wrong.mp3" playRef={playWrong} /> */}
+        </Col>
       </Panel>
-    </div>
+    </AppContainer>
   );
 }
 

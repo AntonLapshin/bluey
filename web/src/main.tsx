@@ -4,9 +4,10 @@ import { App } from "./App.tsx";
 import "normalize.css";
 import "./fonts.css";
 import "./index.css";
-import { Amplify } from 'aws-amplify';
-import '@aws-amplify/ui-react/styles.css';
-import { awsExports } from './awsExports.ts';
+import { Amplify } from "aws-amplify";
+import "@aws-amplify/ui-react/styles.css";
+import { awsExports } from "./awsExports.ts";
+
 Amplify.configure(awsExports as any);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -1,16 +1,14 @@
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { getKeyCorrect, getKeyWrong } from "../tools/score";
+import { Col } from "./Primitives";
 
 export const Score = () => {
   const [correct] = useLocalStorage(getKeyCorrect(), 0);
   const [wrong] = useLocalStorage(getKeyWrong(), 0);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+    <Col
+      css={{
         justifyContent: "center",
         width: 130,
         height: 130,
@@ -25,6 +23,6 @@ export const Score = () => {
         {correct}
       </span>
       <span style={{ color: "white" }}>out of {correct + wrong}</span>
-    </div>
+    </Col>
   );
 };

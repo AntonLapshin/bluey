@@ -101,20 +101,32 @@ function parseAndShuffleQuestion(aiResponse: string): Question {
   };
 }
 
-export const useQuestion = () => {
+interface Props {
+  onCorrect: () => void;
+  onWrong: () => void;
+}
+
+export const useQuestion = ({ onCorrect, onWrong }: Props) => {
+  const [loading, setLoading] = useState(false);
   const [correct, setCorrect] = useLocalStorage(getKeyCorrect(), 0);
   const [wrong, setWrong] = useLocalStorage(getKeyWrong(), 0);
   const [question, setQuestion] = useState<Question | undefined>();
   const [pressedIndex, setPressedIndex] = useState<number | undefined>();
 
   const getNewQuestion = async () => {
-    setPressedIndex(undefined);
-    const reply = await getQuestion({
-      system: getSystemMessage(),
-      prompt: getPrompt(getRandomSubject()),
-    });
-    const q = parseAndShuffleQuestion(reply);
-    setQuestion(q);
+    setLoading(true);
+    try {
+      setPressedIndex(undefined);
+      const reply = await getQuestion({
+        system: getSystemMessage(),
+        prompt: getPrompt(getRandomSubject()),
+      });
+      const q = parseAndShuffleQuestion(reply);
+      setQuestion(q);
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectOption = (index: number) => {
@@ -124,8 +136,10 @@ export const useQuestion = () => {
     setPressedIndex(index);
     const isCorrect = index === question?.correctAnswerIndex;
     if (isCorrect) {
+      onCorrect();
       setCorrect(correct + 1);
     } else {
+      onWrong();
       setWrong(wrong + 1);
     }
     setQuestion({
@@ -135,5 +149,12 @@ export const useQuestion = () => {
     return isCorrect;
   };
 
-  return { question, getNewQuestion, selectOption, pressedIndex };
+  return {
+    loading,
+    question,
+    getNewQuestion,
+    selectOption,
+    pressedIndex,
+    isPressed: pressedIndex !== undefined,
+  };
 };
