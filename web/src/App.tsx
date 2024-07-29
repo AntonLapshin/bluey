@@ -1,7 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { BlueyImage } from "./components/BlueyImage";
 import { Score } from "./components/Score";
-import { Audio } from "./components/Audio";
 import {
   withAuthenticator,
   WithAuthenticatorProps,
